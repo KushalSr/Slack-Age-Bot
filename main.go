@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/joho/godotenv"
 	"github.com/shomali11/slacker"
 )
 
@@ -22,8 +23,13 @@ func printCommandEvents(analyticsChannel <-chan *slacker.CommandEvent) {
 }
 
 func main() {
-	os.Setenv("SLACK_BOT_TOKEN", "xoxb-5683131141239-5683160671895-hAHAJ9smo9QXJODTNtKia1Bq")
-	os.Setenv("SLACK_APP_TOKEN", "xapp-1-A05M7BCFC1W-5694761051925-586470eabc07b39e30134386e154bb9b626fdd83b143382b5e5721f0a32968f5")
+
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading environment variables file")
+	}
+	os.Setenv("SLACK_BOT_TOKEN", "SLACK_BOT_TOKEN")
+	os.Setenv("SLACK_APP_TOKEN", "SLACK_APP_TOKEN")
 
 	bot := slacker.NewClient(os.Getenv("SLACK_BOT_TOKEN"), os.Getenv("SLACK_APP_TOKEN"))
 
@@ -48,7 +54,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	err := bot.Listen(ctx)
+	err = bot.Listen(ctx)
 
 	if err != nil {
 		log.Fatal(err)
